@@ -1,0 +1,294 @@
+/* Ported 1:1 from the approved mock (prayer-mock.html) — nocturnal
+   "hour-before-Fajr" palette + girih star field. Popover-only chrome (no
+   faux menubar/caption/theme-toggle — those were mock demo scaffolding). */
+
+:root {
+  --ground-0: #091B18;
+  --ground-1: #0B201C;
+  --ground-2: #0E2823;
+  --panel: rgba(13, 34, 30, 0.82);
+  --hairline: #1C3B34;
+  --hairline-soft: rgba(34, 73, 63, 0.55);
+  --text: #ECE6D4;
+  --text-dim: #8FA69C;
+  --text-faint: #5E7169;
+  --gold: #C9A34E;
+  --gold-hi: #E6CB78;
+  --gold-glow: rgba(201, 163, 78, 0.16);
+  --emerald: #22493F;
+  --shadow: 0 10px 28px -10px rgba(0, 0, 0, 0.6), 0 4px 12px -6px rgba(0, 0, 0, 0.45);
+  --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
+  --arabic: "SF Arabic", "Geeza Pro", "Noto Naskh Arabic", "Amiri", serif;
+}
+:root[data-theme="light"] {
+  --ground-0: #F5F0E4;
+  --ground-1: #F8F4EA;
+  --ground-2: #FBF8F0;
+  --panel: rgba(250, 246, 237, 0.9);
+  --hairline: #E4DAC4;
+  --hairline-soft: rgba(201, 163, 78, 0.28);
+  --text: #241E12;
+  --text-dim: #6E6650;
+  --text-faint: #A79E86;
+  --gold: #9A7521;
+  --gold-hi: #B98F2E;
+  --gold-glow: rgba(154, 117, 33, 0.12);
+  --emerald: #C9BFA4;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 384px;
+  height: auto;
+  background: transparent;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--sans);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 8px 12px 14px;
+}
+.notch {
+  position: absolute;
+  top: 2px; left: 50%; transform: translateX(-50%) rotate(45deg);
+  width: 16px; height: 16px;
+  background: var(--ground-2);
+  border-left: 1px solid var(--hairline);
+  border-top: 1px solid var(--hairline);
+  border-radius: 3px 0 0 0;
+  z-index: 3;
+}
+
+.popover {
+  position: relative;
+  width: 360px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--ground-2), var(--ground-1) 30%, var(--ground-0));
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+#girih {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+.popover > * { position: relative; z-index: 1; }
+
+/* hero */
+.hero {
+  padding: 22px 22px 20px;
+  text-align: center;
+  background: radial-gradient(90% 120% at 50% -20%, var(--gold-glow), transparent 60%);
+  border-bottom: 1px solid var(--hairline-soft);
+}
+.eyebrow {
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+.hero-name {
+  font-family: var(--serif);
+  font-size: 40px;
+  line-height: 1.02;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin-top: 8px;
+  color: var(--text);
+}
+.hero-arabic {
+  font-family: var(--arabic);
+  font-size: 26px;
+  color: var(--gold-hi);
+  margin-top: 6px;
+  line-height: 1;
+  direction: rtl;
+}
+.countdown {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 15px;
+  border-radius: 999px;
+  background: rgba(201, 163, 78, 0.10);
+  border: 1px solid var(--hairline-soft);
+}
+.countdown .lead { font-size: 12px; color: var(--text-dim); }
+.countdown .val {
+  font-size: 15px; font-weight: 600; color: var(--gold-hi);
+  font-variant-numeric: tabular-nums;
+}
+.countdown .at { font-size: 12px; color: var(--text-faint); }
+
+/* date strip */
+.datestrip {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--hairline-soft);
+  font-size: 12.5px;
+}
+.datestrip .greg { color: var(--text); font-weight: 500; }
+.datestrip .hijri {
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.moon { width: 12px; height: 12px; opacity: 0.9; }
+
+/* prayer list */
+.list { padding: 6px 8px 8px; }
+.row {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: 11px;
+  position: relative;
+}
+.row + .row::before {
+  content: ""; position: absolute; top: 0; left: 46px; right: 12px;
+  height: 1px; background: var(--hairline-soft); opacity: 0.5;
+}
+.row .tick {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--text-faint);
+  justify-self: center;
+}
+.row.passed .name, .row.passed .time { color: var(--text-faint); }
+.row.passed .tick { background: var(--emerald); }
+.row.passed .arabic { color: var(--text-faint); }
+.row .names { display: flex; flex-direction: column; gap: 1px; align-items: flex-start; }
+.row .name {
+  font-size: 15px; font-weight: 500; color: var(--text);
+  letter-spacing: 0.005em;
+}
+.row .arabic {
+  font-family: var(--arabic); font-size: 13px; color: var(--text-dim);
+  direction: rtl; line-height: 1;
+}
+.row .time {
+  font-size: 14.5px; color: var(--text-dim);
+  font-variant-numeric: tabular-nums; font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.row.active {
+  background: linear-gradient(90deg, rgba(201, 163, 78, 0.14), rgba(201, 163, 78, 0.03));
+  box-shadow: inset 0 0 0 1px var(--hairline-soft);
+}
+.row.active::after {
+  content: ""; position: absolute; left: 0; top: 8px; bottom: 8px;
+  width: 3px; border-radius: 3px;
+  background: linear-gradient(180deg, var(--gold-hi), var(--gold));
+}
+.row.active .tick {
+  background: var(--gold-hi);
+  box-shadow: 0 0 0 4px var(--gold-glow), 0 0 10px 1px rgba(230, 203, 120, 0.5);
+  animation: pulse 2.6s ease-in-out infinite;
+}
+.row.active .name { color: var(--text); font-weight: 600; }
+.row.active .time { color: var(--gold-hi); font-weight: 600; }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 4px var(--gold-glow), 0 0 8px 0 rgba(230, 203, 120, 0.35); }
+  50% { box-shadow: 0 0 0 5px var(--gold-glow), 0 0 14px 2px rgba(230, 203, 120, 0.65); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .row.active .tick { animation: none; }
+}
+
+/* footer */
+.footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px 14px;
+  border-top: 1px solid var(--hairline-soft);
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.14));
+}
+.foot-item {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11.5px; color: var(--text-dim);
+}
+.foot-item .k { color: var(--text-faint); }
+.foot-item .v { color: var(--text); font-variant-numeric: tabular-nums; }
+.qibla-icon { width: 15px; height: 15px; color: var(--gold); }
+.gear {
+  width: 16px; height: 16px; color: var(--text-dim);
+  cursor: pointer; transition: color .15s, transform .3s;
+  background: none; border: none; padding: 0;
+}
+.gear:hover { color: var(--gold-hi); transform: rotate(40deg); }
+
+/* settings panel (overlays the popover body, gear toggles it) */
+.settings {
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: linear-gradient(180deg, var(--ground-2), var(--ground-1) 30%, var(--ground-0));
+  display: flex;
+  flex-direction: column;
+}
+.settings[hidden] { display: none; }
+.settings-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--hairline-soft);
+  font-family: var(--serif);
+  font-size: 18px;
+}
+.settings-close {
+  background: none; border: none; color: var(--text-dim);
+  font-size: 16px; cursor: pointer; line-height: 1;
+}
+.settings-close:hover { color: var(--gold-hi); }
+.settings-body { padding: 18px; }
+.settings-label {
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-dim); margin-bottom: 8px; display: block;
+}
+#zone-select {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--ground-1);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.gear,
+.settings-close,
+#zone-select,
+button {
+  outline: none;
+}
+.gear:focus,
+.gear:focus-visible,
+.settings-close:focus,
+.settings-close:focus-visible,
+#zone-select:focus,
+#zone-select:focus-visible,
+button:focus,
+button:focus-visible {
+  outline: none;
+  box-shadow: none;
+}

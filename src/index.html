@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Waktu</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="stage">
+      <div class="notch"></div>
+      <div class="popover">
+        <canvas id="girih"></canvas>
+
+        <div class="hero">
+          <div class="eyebrow">Seterusnya · Next Prayer</div>
+          <div class="hero-name" id="hero-name">&nbsp;</div>
+          <div class="hero-arabic" id="hero-arabic">&nbsp;</div>
+          <div class="countdown">
+            <span class="lead">in</span>
+            <span class="val" id="countdown-val">&mdash;</span>
+            <span class="at" id="countdown-at"></span>
+          </div>
+        </div>
+
+        <div class="datestrip">
+          <span class="greg" id="greg-date">&nbsp;</span>
+          <span class="hijri">
+            <svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M15 2a9 9 0 106.5 15.3A7.5 7.5 0 0115 2z"/></svg>
+            <span id="hijri-date">&nbsp;</span>
+          </span>
+        </div>
+
+        <div class="list" id="prayer-list"></div>
+
+        <div class="footer">
+          <span class="foot-item">
+            <svg class="qibla-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+              <circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-6 -2.4 7.2 -6.6 2.4z" fill="currentColor" stroke="none"/>
+            </svg>
+            <span class="k">Kiblat</span> <span class="v" id="qibla-deg">&mdash;</span>
+          </span>
+          <span class="foot-item"><span class="k">Zon</span> <span class="v" id="zone-district">&mdash;</span></span>
+          <button class="gear" id="settings-gear" aria-label="Tetapan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.6 1.6 0 00-1-1.5 1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H3a2 2 0 110-4h.1a1.6 1.6 0 001.5-1 1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.6 1.6 0 001.8.3H9a1.6 1.6 0 001-1.5V3a2 2 0 114 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 110 4h-.1a1.6 1.6 0 00-1.5 1z"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="settings" id="settings-panel" hidden>
+          <div class="settings-header">
+            <span>Tetapan</span>
+            <button class="settings-close" id="settings-close" aria-label="Tutup">&#10005;</button>
+          </div>
+          <div class="settings-body">
+            <label class="settings-label" for="zone-select">Zon</label>
+            <select id="zone-select"></select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="main.js" defer></script>
+  </body>
+</html>
