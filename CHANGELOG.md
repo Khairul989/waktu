@@ -2,6 +2,13 @@
 
 All notable changes to Waktu are documented here.
 
+## [0.2.2] - 2026-07-07
+
+### Fixed
+- Distribution: the app bundle is now ad-hoc signed (`signingIdentity: "-"`), so a
+  downloaded build no longer shows "'Waktu' is damaged and can't be opened". It now
+  falls under the normal unsigned-app flow (right-click → Open, or `xattr -cr`).
+
 ## [0.2.1] - 2026-07-07
 
 ### Fixed
