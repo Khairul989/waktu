@@ -26,7 +26,8 @@ fn marks(today: &DayPrayer) -> [(&'static str, &'static str, &'static str, i64, 
 /// are never active — they're reference points, not prayer windows.
 pub fn build_prayer_rows(today: &DayPrayer, tomorrow_fajr: i64, now: i64) -> Vec<PrayerRow> {
     let m = marks(today);
-    m.iter()
+    let mut rows: Vec<PrayerRow> = m
+        .iter()
         .enumerate()
         .map(|(i, (key, name, arabic, at_sec, is_fard))| {
             let window_end = m.get(i + 1).map(|next| next.3).unwrap_or(tomorrow_fajr);
@@ -40,7 +41,17 @@ pub fn build_prayer_rows(today: &DayPrayer, tomorrow_fajr: i64, now: i64) -> Vec
                 is_active,
             }
         })
-        .collect()
+        .collect();
+
+    // Between two fard windows there's a legitimate gap (e.g. after sunrise until
+    // Zohor — the Duha period — no fard waqt is current). To avoid an empty list
+    // with nothing highlighted, fall back to highlighting the next upcoming fard.
+    if !rows.iter().any(|r| r.is_active) {
+        if let Some(idx) = m.iter().position(|mk| mk.4 && mk.3 > now) {
+            rows[idx].is_active = true;
+        }
+    }
+    rows
 }
 
 /// The next fard prayer after `now`; rolls to tomorrow's Subuh after Isyak.
@@ -128,8 +139,7 @@ mod tests {
     }
 
     #[test]
-    fn active_waqt_detection_during_asar() {
-        let day = fixture_day();
+    fn active_waqt_detection_during_asar() {        let day = fixture_day();
         let now = 1783328400; // 17:00 local — inside the Asar window
         let rows = build_prayer_rows(&day, TOMORROW_FAJR, now);
 
@@ -141,5 +151,22 @@ mod tests {
         for row in rows.iter().filter(|r| r.key != "asar") {
             assert!(!row.is_active, "{} should not be active", row.key);
         }
+    }
+
+    #[test]
+    fn in_gap_after_sunrise_highlights_next_fard() {
+        let day = fixture_day();
+        let now = 1783303200; // 10:00 local — Duha gap (after Syuruk, before Zohor)
+        let rows = build_prayer_rows(&day, TOMORROW_FAJR, now);
+
+        // No fard window is current, so the next upcoming fard (Zohor) is highlighted.
+        let zohor = rows.iter().find(|r| r.key == "zohor").unwrap();
+        assert!(zohor.is_active, "Zohor should be highlighted as the next prayer in the gap");
+        assert!(!zohor.passed);
+        assert_eq!(
+            rows.iter().filter(|r| r.is_active).count(),
+            1,
+            "exactly one row highlighted"
+        );
     }
 }

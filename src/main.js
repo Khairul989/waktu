@@ -220,3 +220,12 @@ invoke("get_state")
   .catch((e) => console.error("get_state failed", e));
 
 listen("state-updated", (event) => render(event.payload));
+
+// The webview is suspended while the panel is hidden, so it can miss
+// `state-updated` events and go stale (e.g. show yesterday after a day rollover).
+// Re-fetch fresh state every time the popover is opened.
+listen("popover-shown", () => {
+  invoke("get_state")
+    .then(render)
+    .catch((e) => console.error("get_state on show failed", e));
+});

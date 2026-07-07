@@ -123,6 +123,10 @@ pub fn build(app: &AppHandle) -> tauri::Result<()> {
                     position_popover(&window);
                 }
                 panel.show();
+                // The webview is suspended (App Nap) while the panel is hidden,
+                // so it misses `state-updated` events and would otherwise show
+                // stale data (e.g. yesterday's) on open. Tell it to re-fetch.
+                let _ = app_handle.emit("popover-shown", ());
             }
         })
         .build(app)?;

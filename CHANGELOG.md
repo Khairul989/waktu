@@ -1,0 +1,40 @@
+# Changelog
+
+All notable changes to Waktu are documented here.
+
+## [0.2.1] - 2026-07-07
+
+### Fixed
+- Popover no longer shows stale data after a day rollover — it re-fetches fresh
+  state every time it's opened (the webview is suspended while the panel is
+  hidden and was missing `state-updated` events).
+- Active-waqt highlight is no longer missing during the Duha gap (after sunrise,
+  before Zohor): when no fard window is current, the next upcoming prayer is
+  highlighted instead.
+
+## [0.2.0] - 2026-07-06
+
+### Added
+- Prayer-time notifications: a native "Waktu <prayer>" alert with sound fires
+  when each fard prayer comes in (delivered via `osascript` for reliable
+  delivery on unsigned builds).
+- App icon: teal squircle with a gold crescent and star.
+
+### Changed
+- Popover converted to a non-activating `NSPanel` (`tauri-nspanel`): it now
+  floats above all apps and Spaces, opens under the tray icon on the correct
+  monitor, holds focus without stealing app activation, and dismisses on
+  click-away. Fixes the popover appearing on the wrong monitor / behind the
+  focused app / self-dismissing.
+- Multi-monitor positioning rewritten to use native AppKit coordinates
+  (`NSEvent.mouseLocation` + `NSScreen`) instead of scaled tray-event coords.
+
+## [0.1.0] - 2026-07-06
+
+### Added
+- Initial release: macOS menubar prayer-times app for Malaysia.
+- Next-prayer countdown in the menu bar; popover with the day's full schedule,
+  current waqt highlight, Hijri date, and qibla bearing.
+- Location via IP geolocation → JAKIM zone, with manual zone override.
+- Offline monthly cache (Waktu Solat API primary, JAKIM e-Solat for qibla).
+- Nocturnal teal + gold Islamic design with bilingual Malay/Arabic names.
