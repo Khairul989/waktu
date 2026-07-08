@@ -18,17 +18,9 @@ A macOS **menubar** app (Rust / Tauri v2) that shows the next prayer time for yo
 See `docs/BUILD_SPEC.md` for the full architecture and API notes.
 
 ## Download & install
-Grab the latest `.dmg` from the [Releases page](https://github.com/Khairul989/waktu/releases), open it, and drag **Waktu** to Applications.
+Grab the latest `.dmg` from the [Releases page](https://github.com/Khairul989/waktu/releases), open it, drag **Waktu** to Applications, and launch. The app is signed with a Developer ID and notarized by Apple, so it opens without security prompts.
 
-The app is **not notarized** (no paid Apple Developer account), so on first launch macOS blocks it. Do **one** of these:
-
-- **Right-click** Waktu in Applications → **Open** → **Open** in the dialog, **or**
-- Run this once in Terminal to clear the download quarantine:
-  ```sh
-  xattr -cr /Applications/Waktu.app
-  ```
-
-After that it launches normally. (Menubar-only — look for it in the menu bar, not the Dock.)
+(Menubar-only — look for it in the menu bar, not the Dock.)
 
 ## Develop
 ```sh
