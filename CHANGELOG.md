@@ -2,6 +2,17 @@
 
 All notable changes to Waktu are documented here.
 
+## [0.2.3] - 2026-07-14
+
+### Fixed
+- Popover no longer freezes on a stale day-old state after the app is App-Napped
+  overnight (e.g. showing yesterday's date with the countdown stuck at "0 min").
+  The `popover-shown` event can be lost across the webview's suspend/resume, so
+  the frontend now self-heals two ways: the countdown re-fetches whenever it
+  reaches zero (a fresh `next` prayer is always in the future, so `0` means the
+  state is stale), and a native `visibilitychange` listener re-fetches whenever
+  the panel becomes visible.
+
 ## [0.2.2] - 2026-07-07
 
 ### Fixed
