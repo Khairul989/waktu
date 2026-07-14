@@ -13,3 +13,5 @@ target/
 
 # Editor / misc
 *.swp
+
+.env
