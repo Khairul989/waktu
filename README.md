@@ -17,6 +17,11 @@ A macOS **menubar** app (Rust / Tauri v2) that shows the next prayer time for yo
 
 See `docs/BUILD_SPEC.md` for the full architecture and API notes.
 
+## Download & install
+Grab the latest `.dmg` from the [Releases page](https://github.com/Khairul989/waktu/releases), open it, drag **Waktu** to Applications, and launch. The app is signed with a Developer ID and notarized by Apple, so it opens without security prompts.
+
+(Menubar-only — look for it in the menu bar, not the Dock.)
+
 ## Develop
 ```sh
 # prerequisites: Rust stable, and the Tauri CLI v2

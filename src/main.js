@@ -20,6 +20,20 @@ const HIJRI_MONTHS = [
 ];
 
 let state = null;
+let lastStaleRefreshMs = 0;
+let refreshInFlight = false;
+
+async function refreshState() {
+  if (refreshInFlight) return;
+  refreshInFlight = true;
+  try {
+    render(await invoke("get_state"));
+  } catch (e) {
+    console.error("get_state failed", e);
+  } finally {
+    refreshInFlight = false;
+  }
+}
 
 // Backend formats gregorian as "%A, %d %B %Y" (English) — translate to Malay.
 function formatMalayGregorian(greg) {
@@ -86,6 +100,16 @@ function render(newState) {
 function tickCountdown() {
   if (!state) return;
   const diffMs = state.next.at_ms - Date.now();
+  // `next` is always a future prayer, so diffMs <= 0 means the displayed state
+  // is stale (e.g. App Nap froze the webview across the prayer/day boundary).
+  // Self-heal by re-fetching rather than sitting frozen at "0 min".
+  if (diffMs <= 0) {
+    const nowMs = Date.now();
+    if (nowMs - lastStaleRefreshMs > 30000) {
+      lastStaleRefreshMs = nowMs;
+      refreshState();
+    }
+  }
   const totalMin = Math.max(0, Math.round(diffMs / 60000));
   const h = Math.floor(totalMin / 60);
   const m = totalMin % 60;
@@ -215,9 +239,7 @@ window.addEventListener("resize", drawGirih);
 applyTheme();
 drawGirih();
 
-invoke("get_state")
-  .then(render)
-  .catch((e) => console.error("get_state failed", e));
+refreshState();
 
 listen("state-updated", (event) => render(event.payload));
 
@@ -225,7 +247,12 @@ listen("state-updated", (event) => render(event.payload));
 // `state-updated` events and go stale (e.g. show yesterday after a day rollover).
 // Re-fetch fresh state every time the popover is opened.
 listen("popover-shown", () => {
-  invoke("get_state")
-    .then(render)
-    .catch((e) => console.error("get_state on show failed", e));
+  refreshState();
+});
+
+// The backend `popover-shown` event races the webview's suspend/resume cycle
+// and can be lost entirely. `visibilitychange` fires natively when the NSPanel
+// is shown, making it a more reliable trigger for the same refresh.
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") refreshState();
 });
