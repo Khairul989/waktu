@@ -41,6 +41,15 @@ cargo test           # 9 unit tests (next-prayer logic, cache, config, bearing p
 cargo tauri build    # produces Waktu.app under src-tauri/target/release/bundle/
 ```
 
+`src-tauri/Cargo.toml` pins a lean dev profile (no incremental, no debug info for
+dependencies, `rlib` only) which keeps `target/` around 1.4G instead of growing
+without bound. Cargo never deletes superseded artifacts, so after changing the
+feature set in `Cargo.toml` or alternating dev/bundle builds, cap the directory:
+
+```sh
+cargo sweep --maxsize 2GB src-tauri    # removes the oldest artifacts until target/ fits
+```
+
 ## Project layout
 ```
 src/                 vanilla HTML/CSS/JS popover (no framework/bundler)
